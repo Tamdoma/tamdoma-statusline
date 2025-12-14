@@ -35,7 +35,7 @@ const AUTOCOMPACT_BUFFER_RATIO = 0.225;
 
 // Scaling factor to align transcript tokens with /context display
 // Accounts for overhead in API reporting vs /context breakdown
-const TRANSCRIPT_SCALE_FACTOR = AUTOCOMPACT_ENABLED ? 0.83 : 1.0;
+const TRANSCRIPT_SCALE_FACTOR = AUTOCOMPACT_ENABLED ? 0.86 : 1.0;
 
 interface UsageData {
   input_tokens?: number;

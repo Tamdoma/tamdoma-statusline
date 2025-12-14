@@ -1,4 +1,4 @@
-# Claude Code Statusline
+# Tamdoma Statusline
 
 A custom statusline script for [Claude Code](https://claude.ai/code) that displays useful session information at the bottom of your terminal.
 
@@ -10,7 +10,7 @@ You need [Bun](https://bun.sh/) installed on your system. Visit the Bun website 
 
 ### Step 1: Download the Script
 
-1. Download `statusline.ts` from this repository
+1. Download `statusline.ts` from this repository (https://github.com/Tamdoma/tamdoma-statusline)
 2. Create a folder called `scripts` inside your `.claude` folder if it doesn't exist:
    - **Windows**: `C:\Users\YourUsername\.claude\scripts\`
    - **Mac/Linux**: `~/.claude/scripts/`
@@ -55,6 +55,20 @@ You need to know where Bun is installed:
 ### Step 4: Verify It Works
 
 After restarting Claude Code, you should see a statusline at the bottom of your terminal showing model, git branch, project name, context usage, and cost.
+
+## Configuration
+
+Open `statusline.ts` and edit the configuration section at the top of the file:
+
+```typescript
+// Set to true if autocompact mode is enabled in Claude Code
+// Check with /context - if you see "Autocompact buffer" line, set to true
+const AUTOCOMPACT_ENABLED = true;
+```
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AUTOCOMPACT_ENABLED` | `true` | Set to `true` if Claude Code has autocompact enabled. Run `/context` to check - if you see an "Autocompact buffer" line, autocompact is enabled. |
 
 ## Features
 
