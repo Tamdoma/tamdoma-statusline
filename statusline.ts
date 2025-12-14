@@ -31,6 +31,7 @@ interface ClaudeInput {
 }
 
 // Claude Code reserves ~22.5% of context window as autocompact buffer
+// When enabled, effective window = 200k * 0.775 = ~155k usable tokens
 const AUTOCOMPACT_BUFFER_RATIO = 0.225;
 
 // Scaling factor to align transcript tokens with /context display
@@ -156,17 +157,16 @@ function getContextPercent(input: ClaudeInput | null): { used: number; tokens: s
   // Apply scaling factor to match /context display
   const scaledTokens = Math.floor(transcriptTokens * TRANSCRIPT_SCALE_FACTOR);
 
-  // Add autocompact buffer only if enabled
-  const autocompactBuffer = AUTOCOMPACT_ENABLED
-    ? Math.floor(windowSize * AUTOCOMPACT_BUFFER_RATIO)
-    : 0;
-  const totalUsed = scaledTokens + autocompactBuffer;
+  // Calculate effective window size (excluding autocompact buffer if enabled)
+  const effectiveWindow = AUTOCOMPACT_ENABLED
+    ? Math.floor(windowSize * (1 - AUTOCOMPACT_BUFFER_RATIO))
+    : windowSize;
 
-  const usedPct = Math.round((totalUsed / windowSize) * 100);
+  const usedPct = Math.round((scaledTokens / effectiveWindow) * 100);
 
   return {
     used: usedPct,
-    tokens: formatTokens(totalUsed),
+    tokens: formatTokens(scaledTokens),
   };
 }
 
