@@ -10,6 +10,16 @@ import { execSync } from "child_process";
 import { basename } from "path";
 import { readFileSync, existsSync } from "fs";
 
+// ============================================================================
+// CONFIGURATION - Edit these values to match your Claude Code settings
+// ============================================================================
+
+// Set to true if autocompact mode is enabled in Claude Code
+// Check with /context - if you see "Autocompact buffer" line, set to true
+const AUTOCOMPACT_ENABLED = true;
+
+// ============================================================================
+
 interface ClaudeInput {
   session_id?: string;
   transcript_path?: string;
@@ -25,7 +35,7 @@ const AUTOCOMPACT_BUFFER_RATIO = 0.225;
 
 // Scaling factor to align transcript tokens with /context display
 // Accounts for overhead in API reporting vs /context breakdown
-const TRANSCRIPT_SCALE_FACTOR = 0.83;
+const TRANSCRIPT_SCALE_FACTOR = AUTOCOMPACT_ENABLED ? 0.83 : 1.0;
 
 interface UsageData {
   input_tokens?: number;
@@ -146,8 +156,10 @@ function getContextPercent(input: ClaudeInput | null): { used: number; tokens: s
   // Apply scaling factor to match /context display
   const scaledTokens = Math.floor(transcriptTokens * TRANSCRIPT_SCALE_FACTOR);
 
-  // Add autocompact buffer
-  const autocompactBuffer = Math.floor(windowSize * AUTOCOMPACT_BUFFER_RATIO);
+  // Add autocompact buffer only if enabled
+  const autocompactBuffer = AUTOCOMPACT_ENABLED
+    ? Math.floor(windowSize * AUTOCOMPACT_BUFFER_RATIO)
+    : 0;
   const totalUsed = scaledTokens + autocompactBuffer;
 
   const usedPct = Math.round((totalUsed / windowSize) * 100);
